@@ -17,20 +17,14 @@ import java.util.function.UnaryOperator;
 public class B2Quiver implements ModInitializer {
     public static final String MODID = "b2quiver";
     public static final Logger LOGGER = LoggerFactory.getLogger("b2quiver");
-    private static <T> DataComponentType<T> register(String id, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
-        return Registry.register(Registries.DATA_COMPONENT_TYPE, id, ((DataComponentType.Builder)builderOperator.apply(DataComponentType.builder())).build());
-    }
+    UnaryOperator<DataComponentType.Builder<QuiverContentsComponent>> builderOperator = (builder) -> builder.codec(QuiverContentsComponent.CODEC).packetCodec(QuiverContentsComponent.PACKET_CODEC);
 
 
     @Override
     public void onInitialize() {
 
         LOGGER.info("Hello Fabric world!");
-
-        // Register quiver item
-        register(
-                "quiver_contents", builder -> builder.codec(QuiverContentsComponent.CODEC).packetCodec(QuiverContentsComponent.PACKET_CODEC).cache()
-        );
+        Registry.register(Registries.DATA_COMPONENT_TYPE,new Identifier(MODID, "quiver_contents"), ((DataComponentType.Builder)builderOperator.apply(DataComponentType.builder())).build());
         Registry.register(Registries.ITEM, new Identifier(MODID, "quiver"), new QuiverItem(new Item.Settings()));
     }
 }
